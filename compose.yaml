@@ -1,0 +1,51 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py migrate && 
+             python manage.py runserver 0.0.0.0:8000"
+
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS='localhost', '127.0.0.1', '0.0.0.0'
+      - DJANGO_SECRET_KEY=django-insecure-_5=lxiag#^!+^34+)w##=5kzq#vg_z+57sticpg02@odcmy7-q
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postresql/data
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/code
+    command: python manage.py test
+volumes:
+  postgres_data:
