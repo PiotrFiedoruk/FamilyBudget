@@ -7,12 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Budget, BudgetOperation
 from .serializers import BudgetSerializer, BudgetOperationSerializer, UserSerializer
+from .filters import (BudgetDateRangeFilter, BudgetOperationDateRangeFilter, BudgetSharedFilter,
+                      BudgetOperationBudgetIdFilter)
 
 
 # Create your views here.
 class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, BudgetDateRangeFilter, BudgetSharedFilter]
     permission_classes = [IsAuthenticated]
     search_fields = ['name']
 
@@ -24,7 +26,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
 class BudgetOperationViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetOperationSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, BudgetOperationBudgetIdFilter, BudgetOperationDateRangeFilter]
     permission_classes = [IsAuthenticated]
     search_fields = ['category']
 
