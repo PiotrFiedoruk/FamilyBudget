@@ -46,6 +46,8 @@ services:
         condition: service_healthy
     volumes:
       - .:/code
+    environment:
+      - DJANGO_SECRET_KEY=django-insecure-_5=lxiag#^!+^34+)w##=5kzq#vg_z+57sticpg02@odcmy7-q
     command: python manage.py test
 volumes:
   postgres_data:
