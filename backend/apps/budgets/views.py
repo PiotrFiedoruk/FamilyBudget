@@ -9,13 +9,14 @@ from .models import Budget, BudgetOperation
 from .serializers import BudgetSerializer, BudgetOperationSerializer, UserSerializer
 from .filters import (BudgetDateRangeFilter, BudgetOperationDateRangeFilter, BudgetSharedFilter,
                       BudgetOperationBudgetIdFilter)
+from .permissions import IsOwnerOrShared
 
 
 # Create your views here.
 class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetSerializer
     filter_backends = [SearchFilter, BudgetDateRangeFilter, BudgetSharedFilter]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrShared]
     search_fields = ['name']
 
     def get_queryset(self):
