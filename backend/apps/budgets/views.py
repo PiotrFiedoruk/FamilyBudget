@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Budget, BudgetOperation
-from .serializers import BudgetSerializer, BudgetOperationSerializer, UserSerializer
+from .serializers import BudgetSerializer, BudgetDetailedSerializer, BudgetOperationSerializer, UserSerializer
 from .filters import (BudgetDateRangeFilter, BudgetOperationDateRangeFilter, BudgetSharedFilter,
                       BudgetOperationBudgetIdFilter)
 from .permissions import IsOwnerOrShared
@@ -14,7 +14,13 @@ from .permissions import IsOwnerOrShared
 
 # Create your views here.
 class BudgetViewSet(viewsets.ModelViewSet):
-    serializer_class = BudgetSerializer
+
+    def get_serializer_class(self):
+        # adds details for any foreign relations fields if ?detail=true
+        if self.request.query_params.get('detailed') == 'true':
+            return BudgetDetailedSerializer
+        return BudgetSerializer
+
     filter_backends = [SearchFilter, BudgetDateRangeFilter, BudgetSharedFilter]
     permission_classes = [IsOwnerOrShared]
     search_fields = ['name']
