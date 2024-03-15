@@ -16,7 +16,7 @@ from .permissions import IsOwnerOrShared
 class BudgetViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetSerializer
     filter_backends = [SearchFilter, BudgetDateRangeFilter, BudgetSharedFilter]
-    permission_classes = [IsAuthenticated, IsOwnerOrShared]
+    permission_classes = [IsOwnerOrShared]
     search_fields = ['name']
 
     def get_queryset(self):
@@ -28,7 +28,6 @@ class BudgetViewSet(viewsets.ModelViewSet):
 class BudgetOperationViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetOperationSerializer
     filter_backends = [SearchFilter, BudgetOperationBudgetIdFilter, BudgetOperationDateRangeFilter]
-    permission_classes = [IsAuthenticated]
     search_fields = ['category']
 
     def get_queryset(self):
@@ -41,4 +40,3 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     User = get_user_model()
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
