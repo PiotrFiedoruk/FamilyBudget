@@ -27,7 +27,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
             return Budget.objects.all()
-        return Budget.objects.filter(Q(owner=self.request.user) | Q(shared_with=self.request.user))
+        return Budget.objects.filter(Q(owner=self.request.user) | Q(shared_with=self.request.user)).distinct()
 
 
 class BudgetOperationViewSet(viewsets.ModelViewSet):
@@ -38,7 +38,7 @@ class BudgetOperationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return BudgetOperation.objects.all()
-        return BudgetOperation.objects.filter(Q(budget__owner=self.request.user) | Q(budget__shared_with=self.request.user))
+        return BudgetOperation.objects.filter(Q(budget__owner=self.request.user) | Q(budget__shared_with=self.request.user)).distinct()
 
 
 class UserViewSet(viewsets.ModelViewSet):
