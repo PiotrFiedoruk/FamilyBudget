@@ -12,7 +12,6 @@ from .filters import (BudgetDateRangeFilter, BudgetOperationDateRangeFilter, Bud
 from .permissions import IsOwnerOrShared
 
 
-# Create your views here.
 class BudgetViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
