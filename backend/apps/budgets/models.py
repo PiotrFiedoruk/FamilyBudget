@@ -16,6 +16,7 @@ class Budget(models.Model):
 
     class Meta:
         unique_together = ['name', 'owner']
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -31,6 +32,9 @@ class BudgetOperation(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     date = models.DateField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-date',)
 
     def __str__(self):
         return self.category
